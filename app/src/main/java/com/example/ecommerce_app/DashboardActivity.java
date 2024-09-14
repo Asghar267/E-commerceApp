@@ -21,9 +21,9 @@ public class DashboardActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityDashboardBinding.inflate(getLayoutInflater());
-
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_dashboard);
+        setSupportActionBar(binding.toolbarId);
 
     }
 }

@@ -42,7 +42,11 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View view) {
                 String email = binding.emailId.getText().toString();
                 String password = binding.passwordId.getText().toString();
-                loign(email, password);
+                if (email.isEmpty() || password.isEmpty()) {
+                    Toast.makeText(LoginActivity.this, "All fields are required", Toast.LENGTH_SHORT).show();
+                } else {
+                    loign(email, password);
+                }
             }
         });
     }
@@ -56,19 +60,29 @@ public class LoginActivity extends AppCompatActivity {
         firebaseAuth.signInWithEmailAndPassword(email.trim(), password.trim()).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
             @Override
             public void onSuccess(AuthResult authResult) {
-                progressDialog.cancel();
+                progressDialog.dismiss();
                 Toast.makeText(LoginActivity.this,"Success", Toast.LENGTH_SHORT).show();
                 binding.emailId.setText("");
                 binding.passwordId.setText("");
+                startActivity(new Intent(LoginActivity.this, DashboardActivity.class));
+
 
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                progressDialog.cancel();
+                progressDialog.dismiss();
                 Toast.makeText(LoginActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
 
             }
         });
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if(FirebaseAuth.getInstance().getCurrentUser() != null){
+            startActivity(new Intent(LoginActivity.this, DashboardActivity.class));
+        }
     }
 }

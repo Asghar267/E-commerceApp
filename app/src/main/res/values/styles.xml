@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Define your button overlay style -->
+    <style name="ButtonOverlay" parent="ThemeOverlay.AppCompat">
+        <item name="android:background">@color/orange</item> <!-- Background color -->
+        <item name="android:textColor">@color/white</item> <!-- Optional: Text color -->
+        <item name="android:padding">16dp</item> <!-- Optional: Padding -->
+        <!-- Add other styling attributes if needed -->
+    </style>
+</resources>

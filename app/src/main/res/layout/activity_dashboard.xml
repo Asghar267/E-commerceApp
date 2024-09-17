@@ -1,53 +1,86 @@
-<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".DashboardActivity">
-    
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar_id"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/orange">
-        <RelativeLayout
+    android:orientation="vertical">
+
+<!--     Toolbar -->
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar_id"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-            <ImageView
-                android:id="@+id/profile_id"
-                android:layout_centerVertical="true"
-                android:layout_alignParentLeft="true"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:src="@drawable/person_icon"
-                app:tint="@color/white" />
-            <TextView
-                android:layout_centerInParent="true"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Ecom"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:textColor="@color/white"/>
-            <ImageView
-                android:id="@+id/cart_id"
-                android:layout_centerVertical="true"
-                android:layout_alignParentRight="true"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:src="@drawable/shopping_cart_icon"
-                app:tint="@color/white"
-                android:layout_marginRight="16dp"/>
-        </RelativeLayout>
-    </androidx.appcompat.widget.Toolbar>
+            android:layout_height="wrap_content"
+            android:background="@color/orange">
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
-    <androidx.recyclerview.widget.RecyclerView
+                <ImageView
+                    android:id="@+id/logout_id"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:src="@drawable/logout_icon"
+                    app:tint="@color/white" />
+
+<!--                <ImageView-->
+<!--                    android:id="@+id/profile_id"-->
+<!--                    android:layout_centerVertical="true"-->
+<!--                    android:layout_alignParentLeft="true"-->
+<!--                    android:layout_width="30dp"-->
+<!--                    android:layout_height="30dp"-->
+<!--                    android:src="@drawable/person_icon"-->
+<!--                    app:tint="@color/white" />-->
+
+                <TextView
+                    android:layout_centerInParent="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Ecom"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/white"/>
+
+                <ImageView
+                    android:id="@+id/cart_id"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="16dp"
+                    android:src="@drawable/shopping_cart_icon"
+                    app:tint="@color/white" />
+
+                <TextView
+                    android:id="@+id/cart_item_count"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_alignTop="@id/cart_id"
+                    android:layout_alignEnd="@id/cart_id"
+                    android:layout_marginEnd="-10dp"
+                    android:layout_marginTop="0dp"
+                    android:background="@drawable/cart_count_bg"
+                    android:text="0"
+                    android:textColor="@color/white"
+                    android:gravity="center"
+                    android:textSize="12sp"/>
+
+            </RelativeLayout>
+        </androidx.appcompat.widget.Toolbar>
+
+    <!-- ScrollView to scroll vertically through categories -->
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="match_parent"
+        android:padding="10dp">
 
-
+        <LinearLayout
+            android:id="@+id/categories_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <!-- Categories will be added dynamically here -->
+        </LinearLayout>
+    </ScrollView>
 </LinearLayout>

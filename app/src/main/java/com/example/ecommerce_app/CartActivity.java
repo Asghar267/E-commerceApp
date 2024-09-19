@@ -66,21 +66,13 @@ public class CartActivity extends AppCompatActivity implements CartAdapter.CartU
         cartRecyclerView = findViewById(R.id.cart_recycler_view);
         totalPriceText = findViewById(R.id.total_amount);
         checkoutButton = findViewById(R.id.checkout_button);
-//        cartItemCountTextView = findViewById(R.id.total_items);
+//        cartItemCountTextView = findViewById(R.id.cart_count_text);
         backBtn = findViewById(R.id.backBtn);
 
-        backBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent( CartActivity.this,  DashboardActivity.class));
-
-            }
-        });
-
+        backBtn.setOnClickListener(view -> finish());
 
         // Initialize CartAdapter
         cartAdapter = new CartAdapter(this, cartItems, cartItemCountTextView, this);
-
         cartRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         cartRecyclerView.setAdapter(cartAdapter);
 
@@ -153,7 +145,6 @@ public class CartActivity extends AppCompatActivity implements CartAdapter.CartU
             soldItems.add(productMap);
         }
 
-
         // Store sold products in Firestore
         for (Map<String, Object> soldItem : soldItems) {
             soldProductsRef.add(soldItem).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
@@ -185,184 +176,3 @@ public class CartActivity extends AppCompatActivity implements CartAdapter.CartU
         editor.apply();
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//public class CartActivity extends AppCompatActivity {
-//
-//    private SharedPreferences sharedPreferences;
-//    private Gson gson;
-//    private RecyclerView cartRecyclerView;
-//    private CartAdapter cartAdapter;
-//    private List<Product_model> cartItems;
-//    private TextView totalPriceText;
-//    private Button checkoutButton;
-//
-//    @Override
-//    protected void onCreate(Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-//        setContentView(R.layout.activity_cart);
-//
-//        // Initialize SharedPreferences and Gson
-//        sharedPreferences = getSharedPreferences("CartPreferences", MODE_PRIVATE);
-//        gson = new Gson();
-//
-//        // Load cart items
-//        cartItems = loadCartItems();
-//
-//        // Set up RecyclerView and Adapter
-//        cartRecyclerView = findViewById(R.id.cart_recycler_view);
-//        totalPriceText = findViewById(R.id.total_amount);
-//        checkoutButton = findViewById(R.id.checkout_button);
-//
-//        // Initialize CartAdapter
-//        cartAdapter = new CartAdapter(this, cartItems, new CartAdapter.CartUpdateListener() {
-//            @Override
-//            public void onCartUpdated() {
-//                calculateTotalPrice();
-//            }
-//        });
-//
-//        cartRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-//        cartRecyclerView.setAdapter(cartAdapter);
-//
-//        // Calculate and display total price
-//        calculateTotalPrice();
-//
-//        // Checkout button functionality can be added here
-//        checkoutButton.setOnClickListener(v -> {
-//            // Handle checkout logic here
-//        });
-//    }
-//
-//    // Method to load cart items from SharedPreferences
-//    private List<Product_model> loadCartItems() {
-//        String cartItemsJson = sharedPreferences.getString("cart_items", null);
-//        if (cartItemsJson != null) {
-//            Type type = new TypeToken<List<Product_model>>() {}.getType();
-//            return gson.fromJson(cartItemsJson, type);
-//        } else {
-//            return new ArrayList<>();
-//        }
-//    }
-//
-//    // Method to calculate total price of all items in the cart
-//    private void calculateTotalPrice() {
-//        double totalPrice = 0;
-//        for (Product_model product : cartItems) {
-//            try {
-//                // Multiply price by the quantity
-//                double price = Double.parseDouble(product.getPrice());
-//                int quantity = Integer.parseInt(product.getQuantity());
-//                totalPrice += price * quantity;
-//            } catch (NumberFormatException e) {
-//                e.printStackTrace();
-//            }
-//        }
-//
-//        // Update the total price TextView
-//        totalPriceText.setText(String.format("Total Price: $%.2f", totalPrice));
-//    }
-//}
-
-
-
-
-
-
-
-
-
-
-
-//public class CartActivity extends AppCompatActivity {
-//    private SharedPreferences sharedPreferences;
-//    private Gson gson;
-//    private RecyclerView cartRecyclerView;
-//    private CartAdapter cartAdapter; // A new adapter for displaying cart items
-//    private List<Product_model> cartItems;
-//    private TextView totalPriceText ,decription;
-//    private Button checkoutButton;
-//
-//    @Override
-//    protected void onCreate(Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-//        EdgeToEdge.enable(this);
-//        setContentView(R.layout.activity_cart);
-//        sharedPreferences = getSharedPreferences("CartPreferences", MODE_PRIVATE);
-//        gson = new Gson();
-//
-//        cartItems = loadCartItems();
-//        cartRecyclerView = findViewById(R.id.cart_recycler_view);
-//        totalPriceText = findViewById(R.id.total_amount);
-//        checkoutButton = findViewById(R.id.checkout_button);
-//        cartAdapter = new CartAdapter(this, cartItems);
-//        cartRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-//        cartRecyclerView.setAdapter(cartAdapter);
-//
-//        calculateTotalPrice();
-//
-//    }
-//
-//    private List<Product_model> loadCartItems() {
-//        String cartItemsJson = sharedPreferences.getString("cart_items", null);
-//        if (cartItemsJson != null) {
-//            Type type = new TypeToken<List<Product_model>>() {
-//            }.getType();
-//            return gson.fromJson(cartItemsJson, type);
-//        } else {
-//            return new ArrayList<>();
-//        }
-//    }
-//
-//
-//    public void calculateTotalPrice() {
-//        double totalPrice = 0;
-//        for (Product_model product : cartItems) {
-//            try {
-//                int price = Integer.parseInt(product.getPrice());
-//                totalPrice += price *  Integer.parseInt(product.getQuantity());
-//            } catch (NumberFormatException e) {
-//                e.printStackTrace();
-//            }
-//        }
-//        totalPriceText.setText(String.format("Total Price: $%.2f", totalPrice));
-//
-////    private void calculateTotalPrice() {
-////        double totalPrice = 0;
-////        for (Product_model product : cartItems) {
-////            try {
-////                // Parse the price from string to double
-////                double price = Double.parseDouble(product.getPrice());
-////                totalPrice += price;
-////            } catch (NumberFormatException e) {
-////                // Handle the case where the price string is not a valid double
-////                e.printStackTrace();
-////                // Optionally, show an error message to the user
-////            }
-////        }
-////        // Update the total price TextView
-////        totalPriceText.setText(String.format("Total Price: $%.2f", totalPrice));
-////    }
-//}
-//}

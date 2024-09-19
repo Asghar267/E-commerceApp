@@ -3,6 +3,7 @@ package com.example.ecommerce_app;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -24,14 +25,11 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-//public class DashboardActivity extends AppCompatActivity {
 public class DashboardActivity extends AppCompatActivity implements ProductAdapter.CartUpdateListener {
     ActivityDashboardBinding binding;
-
     public TextView cartItemCountTextView;
     private FirebaseFirestore firestore;
     private int cartItemCount = 0;
-//    private List<Product_model> cartItems = new ArrayList<>(); // List to hold cart items
     private SharedPreferences sharedPreferences;
     private Gson gson;
     private List<Product_model> cartItems;
@@ -49,19 +47,18 @@ public class DashboardActivity extends AppCompatActivity implements ProductAdapt
         sharedPreferences = getSharedPreferences("CartPreferences", MODE_PRIVATE);
         gson = new Gson();
         cartItemCountTextView = findViewById(R.id.cart_item_count);
+        // Call method to fetch categories and populate the UI
+        fetchCategoriesAndProducts();
+        cartItems = loadCartItems();
+        updateCartIcon();
+        handler.postDelayed(updateCartIconRunnable, 5000); // Start after 5 seconds
+
         binding.cartId.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(DashboardActivity.this, CartActivity.class));
             }
         });
-
-        // Call method to fetch categories and populate the UI
-        fetchCategoriesAndProducts();
-        cartItems = loadCartItems();
-        cartItemCount = cartItems.size(); // Update cart count
-        cartItemCountTextView.setText(String.valueOf(cartItemCount));
-        updateCartIcon(cartItems.size());
 
         binding.logoutId.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -85,10 +82,7 @@ public class DashboardActivity extends AppCompatActivity implements ProductAdapt
                 finish(); // Finish the current activity
             }
         });
-
-
     }
-
 
     private void fetchCategoriesAndProducts() {
         firestore.collection("categories")
@@ -119,11 +113,6 @@ public class DashboardActivity extends AppCompatActivity implements ProductAdapt
             TextView categoryName = categoryView.findViewById(R.id.categoryName_id);
             categoryName.setText(category.getName());
 
-            // Set "See More" button click listener
-//            TextView seeMore = categoryView.findViewById(R.id.seeMore);
-//            seeMore.setOnClickListener(v -> {
-//                // Intent to open category detail page or load more products
-//            });
 
             // Fetch products by category and display them
             RecyclerView productRecyclerView = categoryView.findViewById(R.id.productRecyclerView_id);
@@ -149,10 +138,8 @@ public class DashboardActivity extends AppCompatActivity implements ProductAdapt
                         for (QueryDocumentSnapshot document : task.getResult()) {
                             Product_model product = document.toObject(Product_model.class);
                             productList.add(product);
-//                            Toast.makeText(DashboardActivity.this, "Loading image" + product.getImage(), Toast.LENGTH_SHORT).show();
-                        }
+                         }
                         // Set up the horizontal RecyclerView with product data
-//                        ProductAdapter productAdapter = new ProductAdapter(this, productList);
                         ProductAdapter productAdapter = new ProductAdapter(this, productList, this);
 
                         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
@@ -163,12 +150,10 @@ public class DashboardActivity extends AppCompatActivity implements ProductAdapt
                 });
     }
 
-
     private void addToCart(Product_model product) {
         // Load the current cart items
-        cartItems = loadCartItems();
         saveCartItems();
-        updateCartIcon(cartItems.size());
+        updateCartIcon();
 
         if (cartItems.contains(product)) {
             Toast.makeText(this, "Product already in cart", Toast.LENGTH_SHORT).show();
@@ -178,7 +163,7 @@ public class DashboardActivity extends AppCompatActivity implements ProductAdapt
             cartItemCount = cartItems.size(); // Update cart count
             cartItemCountTextView.setText(String.valueOf(cartItemCount));  // Update UI
             saveCartItems(cartItems); // Save the updated cart list
-            updateCartIcon(cartItemCount); // Update cart icon
+            updateCartIcon(); // Update cart icon
             Toast.makeText(this, "Product added to cart", Toast.LENGTH_SHORT).show();
         }
     }
@@ -217,8 +202,29 @@ public class DashboardActivity extends AppCompatActivity implements ProductAdapt
     }
 
 
-    public void updateCartIcon(int count) {
-        binding.cartItemCount.setText(String.valueOf(count));
+    public void updateCartIcon() {
+        cartItems = loadCartItems();
+
+        binding.cartItemCount.setText(String.valueOf(cartItems.size()));
     }
 
-}
+
+        private Handler handler = new Handler();
+        private Runnable updateCartIconRunnable = new Runnable() {
+            @Override
+            public void run() {
+                updateCartIcon();  // Call the updateCartIcon method
+                handler.postDelayed(this, 5000); // Recall this runnable after 5 seconds (5000 ms)
+            }
+        };
+
+
+
+        @Override
+        protected void onDestroy() {
+            super.onDestroy();
+            handler.removeCallbacks(updateCartIconRunnable); // Stop the handler when the activity is destroyed
+        }
+    }
+
+
